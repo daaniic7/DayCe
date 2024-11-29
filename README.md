@@ -25,7 +25,7 @@ mientras que los técnicos podrán tener la oportunidad de tener todo su trabajo
   - `Datos`
 
 - **MainActivity**
-
+- **Login**
 ---
 
 ## **Descripción de Cada Clase**
@@ -60,8 +60,13 @@ mientras que los técnicos podrán tener la oportunidad de tener todo su trabajo
    - Configura el adaptador para el `RecyclerView` mediante el método `setAdapter` del controlador.
    - Configura la disposición de los elementos en una lista vertical.
    - Contiene el botón de "Cerrar Sesión" que redirige al usuario a la actividad de inicio de sesión.
-
----
+8. **`Login`:**
+  - Implementa un flujo básico de inicio de sesión:
+    - Verifica que los campos de usuario y contraseña no estén vacíos.
+    - Valida las credenciales y redirige a la actividad principal (`MainActivity`) en caso de éxito.
+    - Muestra mensajes `Toast` para indicar errores (credenciales incorrectas o campos vacíos).
+  - Configura preferencias compartidas (`SharedPreferences`) para almacenamiento de datos persistentes.
+  - Ajusta el diseño a pantallas modernas con bordes redondeados o recortes (`enableEdgeToEdge` y `WindowInsetsCompat`).
 
 ## **Estructura de las Vistas**
 
@@ -71,7 +76,9 @@ mientras que los técnicos podrán tener la oportunidad de tener todo su trabajo
 - **`layout`:**
   - `activity_main.xml` - Diseño de la actividad principal con un `RecyclerView` y un botón para cerrar sesión.
   - `item_aviso.xml` - Diseño individual de cada ítem en el `RecyclerView`. Muestra los detalles del aviso y contiene un botón para eliminarlo.
-
+  - `activity_login.xml`:
+  - Interfaz de inicio de sesión con campos para usuario y contraseña.
+  - Botón para validar las credenciales y proceder a la pantalla principal.
 ---
 
 ## **Características de la Aplicación**
@@ -118,5 +125,4 @@ También tendremos que habilitar el permiso a internet para la carga de las imá
 ```xml
 <!-- Permiso para usar Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
-
 ```
