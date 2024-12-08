@@ -126,3 +126,176 @@ También tendremos que habilitar el permiso a internet para la carga de las imá
 <!-- Permiso para usar Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
 ```
+# VERSION 1.2
+
+
+He implementado en una carpeta llamada Dialogues los diferentes Dialogues de Editar, Borrar y Añadir, para de esa forma hacer que el Controller esté algo más limpio, al igual que el MainActivity
+
+A continuación procederé a mostrar como se ven estos Dialogues en nuestro código:
+
+## DialogAddAviso
+
+```kt
+package com.example.dayce.dialogues
+
+import android.app.AlertDialog
+import android.app.Dialog
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import com.example.dayce.R
+import com.example.dayce.databinding.DialogAddAvisoBinding
+import com.example.dayce.models.Aviso
+
+class DialogAddAviso(
+    private val onNewAvisoDialog: (Aviso) -> Unit
+) : DialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let { myActivity ->
+            val builder = AlertDialog.Builder(myActivity)
+            val inflater = myActivity.layoutInflater
+            val viewDialog = inflater.inflate(R.layout.dialog_add_aviso, null)
+            builder.setView(viewDialog)
+                .setMessage("Añadir Aviso")
+                .setPositiveButton("Aceptar") { _, _ ->
+                    val aviso = recoverDataLayout(viewDialog)
+                    if (validacion(aviso)) {
+                        onNewAvisoDialog(aviso)
+                        Toast.makeText(myActivity, "Aviso creado", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(myActivity, "Por favor, rellena todos los campos", Toast.LENGTH_LONG).show()
+                    }
+                }
+                .setNegativeButton("Cancelar") { dialog, _ ->
+                    Toast.makeText(myActivity, "Añadir cancelado", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+                }
+                .create()
+        } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    private fun validacion(aviso: Aviso): Boolean {
+        return aviso.nombre.isNotEmpty() &&
+                aviso.direccion.isNotEmpty() &&
+                aviso.fecha.isNotEmpty() &&
+                aviso.descripcion.isNotEmpty() &&
+                aviso.imagen.isNotEmpty()
+    }
+
+    private fun recoverDataLayout(view: View): Aviso {
+        val binding = DialogAddAvisoBinding.bind(view)
+        return Aviso(
+            nombre = binding.etNombre.text.toString(),
+            direccion = binding.etDireccion.text.toString(),
+            fecha = binding.etFecha.text.toString(),
+            descripcion = binding.etDescripcion.text.toString(),
+            imagen = binding.etImagen.text.toString()
+        )
+    }
+}
+
+```
+
+
+## DialogEditAviso
+
+```kt
+package com.example.dayce.dialogues
+
+import android.app.AlertDialog
+import android.app.Dialog
+import android.os.Bundle
+import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import com.example.dayce.databinding.DialogEditarAvisoBinding
+import com.example.dayce.models.Aviso
+
+class DialogEditAviso(
+    private val avisoToEdit: Aviso,
+    private val onEditAvisoDialog: (Aviso) -> Unit
+) : DialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let { myActivity ->
+            val inflater = myActivity.layoutInflater
+            val binding = DialogEditarAvisoBinding.inflate(inflater)
+            binding.etNombre.setText(avisoToEdit.nombre)
+            binding.etDireccion.setText(avisoToEdit.direccion)
+            binding.etFecha.setText(avisoToEdit.fecha)
+            binding.etDescripcion.setText(avisoToEdit.descripcion)
+            binding.etImagen.setText(avisoToEdit.imagen)
+
+            val builder = AlertDialog.Builder(myActivity)
+            builder.setView(binding.root)
+                .setTitle("Editar Aviso")
+                .setPositiveButton("Guardar") { _, _ ->
+                    val updatedAviso = recoverDataLayout(binding)
+                    if (validacion(updatedAviso)) {
+                        onEditAvisoDialog(updatedAviso)
+                    } else {
+                        Toast.makeText(myActivity, "Todos los campos son obligatorios", Toast.LENGTH_LONG).show()
+                    }
+                }
+                .setNegativeButton("Cancelar") { dialog, _ ->
+                    dialog.cancel()
+                }
+                .create()
+        } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    private fun validacion(aviso: Aviso): Boolean {
+        return aviso.nombre.isNotEmpty() &&
+                aviso.direccion.isNotEmpty() &&
+                aviso.fecha.isNotEmpty() &&
+                aviso.descripcion.isNotEmpty() &&
+                aviso.imagen.isNotEmpty()
+    }
+
+    private fun recoverDataLayout(binding: DialogEditarAvisoBinding): Aviso {
+        return Aviso(
+            nombre = binding.etNombre.text.toString(),
+            direccion = binding.etDireccion.text.toString(),
+            fecha = binding.etFecha.text.toString(),
+            descripcion = binding.etDescripcion.text.toString(),
+            imagen = binding.etImagen.text.toString()
+        )
+    }
+}
+```
+
+
+DialogDeleteAviso
+
+```kt
+package com.example.dayce.dialogues
+
+import android.app.AlertDialog
+import android.app.Dialog
+import android.os.Bundle
+import androidx.fragment.app.DialogFragment
+
+class DialogDeleteAviso(
+    private val position: Int,
+    private val onDeleteAvisoDialog: (Int) -> Unit
+) : DialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let { myActivity ->
+            val builder = AlertDialog.Builder(myActivity)
+            builder.setMessage("¿Estás seguro que quieres eliminar este aviso?")
+                .setPositiveButton("Sí") { _, _ ->
+                    onDeleteAvisoDialog(position)
+                }
+                .setNegativeButton("Cancelar") { dialog, _ ->
+                    dialog.cancel()
+                }
+                .create()
+        } ?: throw IllegalStateException("Activity cannot be null")
+    }
+}
+```
+Como se puede ver tanto en el caso de editar y añadir es obligatorio rellenar todos los campos porque de lo contrario no se realizarán los cambios, y al borrar se nos preguntará si de verdad deseamos borrar el aviso, a diferencia de en la versión 1.1 donde el aviso era eliminado con tan solo pulsar el botón de borrar
+
+
