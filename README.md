@@ -3,6 +3,7 @@
 Una aplicación donde los clientes pueden solicitar los servicios de un técnico especializado en la instalación, reparación, mantenimiento y revisión de electrodomésticos,
 mientras que los técnicos podrán tener la oportunidad de tener todo su trabajo bien organizado, aceptando y rechazando avisos cuando sea necesario.
 
+  ## VERSION 1.2 YA DISPONIBLE, INFORMACIÓN ACTUALIZADA EN EL README Y EN EL CÓDIGO!
 
 # VERSION 1.1
 
@@ -129,7 +130,120 @@ También tendremos que habilitar el permiso a internet para la carga de las imá
 # VERSION 1.2
 
 
-He implementado en una carpeta llamada Dialogues los diferentes Dialogues de Editar, Borrar y Añadir, para de esa forma hacer que el Controller esté algo más limpio, al igual que el MainActivity
+He implementado en una carpeta llamada Dialogues los diferentes Dialogues de Editar, Borrar y Añadir, para de esa forma hacer que el Controller esté algo más limpio ordenado, al igual que el MainActivity, delegando todas las funciones de los mismos hacia los diferentes Dialogues, aplicando el clásico "divide y vencerás"
+
+## Main Activity
+
+```kt
+package com.example.dayce
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.dayce.controller.Controller
+import com.example.dayce.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var controller: Controller
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Usar ViewBinding para inflar la vista
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Inicializar el controlador
+        controller = Controller(this, binding)
+
+        // Configurar el botón flotante para añadir un nuevo aviso
+        binding.btnAddAviso.setOnClickListener {
+            controller.addAviso()
+        }
+
+        // Configurar el botón para cerrar sesión
+        binding.btnVolverLogin.setOnClickListener {
+            finish() // Cierra esta actividad para volver a la anterior (Login)
+        }
+    }
+}
+``` 
+## Controller 
+
+```
+package com.example.dayce.controller
+
+import android.content.Context
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dayce.adapter.AdapterAviso
+import com.example.dayce.dao.AvisoDAO
+import com.example.dayce.databinding.ActivityMainBinding
+import com.example.dayce.dialogues.DialogAddAviso
+import com.example.dayce.dialogues.DialogDeleteAviso
+import com.example.dayce.dialogues.DialogEditAviso
+import com.example.dayce.models.Aviso
+
+class Controller(
+    private val context: Context,
+    private val binding: ActivityMainBinding
+) {
+
+    private lateinit var listaAvisos: MutableList<Aviso>
+
+    init {
+        initData()
+        setAdapter()
+    }
+
+    private fun initData() {
+        listaAvisos = AvisoDAO.getDataAvisos().toMutableList() // Acceso correcto y mutable
+    }
+
+    private fun setAdapter() {
+        val adapter = AdapterAviso(
+            listaAvisos,
+            { position -> deleteAviso(position) },  // Eliminar aviso
+            { position -> editAviso(position) }    // Editar aviso
+        )
+        binding.myRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.myRecyclerView.adapter = adapter
+    }
+
+    private fun deleteAviso(position: Int) {
+        val dialog = DialogDeleteAviso(position) { pos ->
+            val nombreAviso = listaAvisos[pos].nombre
+            listaAvisos.removeAt(pos)
+            binding.myRecyclerView.adapter?.notifyItemRemoved(pos)
+            Toast.makeText(context, "Aviso eliminado: $nombreAviso", Toast.LENGTH_SHORT).show()
+        }
+        dialog.show((context as androidx.fragment.app.FragmentActivity).supportFragmentManager, "DialogDeleteAviso")
+    }
+
+    private fun editAviso(position: Int) {
+        val aviso = listaAvisos[position]
+        val dialog = DialogEditAviso(aviso) { updatedAviso ->
+            // Actualizar los datos del aviso con los valores editados
+            listaAvisos[position] = updatedAviso
+            binding.myRecyclerView.adapter?.notifyItemChanged(position)
+            Toast.makeText(context, "Aviso actualizado", Toast.LENGTH_SHORT).show()
+        }
+        dialog.show((context as androidx.fragment.app.FragmentActivity).supportFragmentManager, "DialogEditAviso")
+    }
+
+    fun addAviso() {
+        val dialog = DialogAddAviso { newAviso ->
+            listaAvisos.add(newAviso)
+            binding.myRecyclerView.adapter?.notifyItemInserted(listaAvisos.size - 1)
+            Toast.makeText(context, "Nuevo aviso añadido", Toast.LENGTH_SHORT).show()
+        }
+        dialog.show((context as androidx.fragment.app.FragmentActivity).supportFragmentManager, "DialogAddAviso")
+    }
+}
+```
+
+
 
 A continuación procederé a mostrar como se ven estos Dialogues en nuestro código:
 
@@ -266,7 +380,7 @@ class DialogEditAviso(
 ```
 
 
-DialogDeleteAviso
+## DialogDeleteAviso
 
 ```kt
 package com.example.dayce.dialogues
@@ -296,6 +410,269 @@ class DialogDeleteAviso(
     }
 }
 ```
-Como se puede ver tanto en el caso de editar y añadir es obligatorio rellenar todos los campos porque de lo contrario no se realizarán los cambios, y al borrar se nos preguntará si de verdad deseamos borrar el aviso, a diferencia de en la versión 1.1 donde el aviso era eliminado con tan solo pulsar el botón de borrar
+Como se puede ver tanto en el caso de editar y añadir es obligatorio rellenar todos los campos porque de lo contrario no se realizarán los cambios, y al borrar se nos preguntará si de verdad deseamos borrar el aviso, a diferencia de en la versión 1.1 donde el aviso era eliminado con tan solo pulsar sobre el botón de borrar.
 
+Por último quisiera mostrar como se ven las views en este momento tras realizar las modificaciones pertinentes para esta versión 1.2
+
+## activity main
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- FrameLayout para el contenido principal -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btn_volver_login">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/my_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:padding="25dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginStart="70dp"
+            android:text="Lista de Avisos" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="40dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="800dp"
+            android:layout_marginStart="370dp" />
+
+    </FrameLayout>
+
+    <!-- FloatingActionButton para añadir nuevo aviso -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_aviso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_volver_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="Añadir aviso"
+        app:srcCompat="@drawable/agregar" />
+
+
+    <!-- Botón de cerrar sesión -->
+    <Button
+        android:id="@+id/btn_volver_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Cerrar Sesión"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+```
+
+## dialog add
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".dialogues.DialogAddAviso">
+
+    <LinearLayout
+        android:layout_width="313dp"
+        android:layout_height="224dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="294dp"
+            android:layout_height="219dp"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:weightSum="5">
+
+            <LinearLayout
+                android:layout_width="271dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2.7"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <EditText
+                    android:id="@+id/etNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="7dp"
+                    android:hint="Nombre"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/etDireccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="7dp"
+                    android:hint="Dirección"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/etFecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="7dp"
+                    android:hint="Fecha"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/etDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="7dp"
+                    android:hint="Descripción"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/etImagen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="7dp"
+                    android:hint="URL de la imagen"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+```
+
+
+## dialog borrar
+
+```<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".dialogues.DialogDeleteAviso">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvDeleteMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="¿Estás seguro de que quieres eliminar este aviso?"
+            android:textSize="16sp"
+            android:paddingBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnCancelDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelar"
+                android:layout_marginEnd="16dp" />
+
+            <Button
+                android:id="@+id/btnConfirmDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eliminar" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+```
+
+## dialog editar
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".dialogues.DialogEditAviso">
+
+    <LinearLayout
+        android:layout_width="307dp"
+        android:layout_height="264dp"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:weightSum="5">
+
+        <LinearLayout
+            android:layout_width="261dp"
+            android:layout_height="258dp"
+            android:layout_weight="2.7"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <EditText
+                android:id="@+id/etNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp"
+                android:hint="Nombre"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp"
+                android:hint="Dirección"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etFecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp"
+                android:hint="Fecha"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp"
+                android:hint="Descripción"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etImagen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp"
+                android:hint="URL de la imagen"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+```
 
