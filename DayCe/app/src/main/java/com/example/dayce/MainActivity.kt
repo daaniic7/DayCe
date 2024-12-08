@@ -1,38 +1,33 @@
 package com.example.dayce
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.dayce.controller.Controller
+import com.example.dayce.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var controller: Controller
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        //Se recuperan el usuario y la contraseña introducidos en el login
-        val usuario = intent.getStringExtra("usuario")
-        val contrasena = intent.getStringExtra("contrasena")
+        // Usar ViewBinding para inflar la vista
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        // Inicializar el controlador
+        controller = Controller(this, binding)
 
-        val tvUsuario = findViewById<TextView>(R.id.tv_usuario)
-        val tvContrasena = findViewById<TextView>(R.id.tv_contrasena)
-
-        if (usuario != null) {
-            tvUsuario.text = usuario
-        }
-        if (contrasena != null) {
-            tvContrasena.text = contrasena
+        // Configurar el botón flotante para añadir un nuevo aviso
+        binding.btnAddAviso.setOnClickListener {
+            controller.addAviso()
         }
 
-        //Botón para Cerrar sesión y volver al Login
-        val btnVolverLogin = findViewById<Button>(R.id.btn_volver_login)
-        btnVolverLogin.setOnClickListener {
-
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
+        // Configurar el botón para cerrar sesión
+        binding.btnVolverLogin.setOnClickListener {
+            finish() // Cierra esta actividad para volver a la anterior (Login)
         }
     }
 }
-

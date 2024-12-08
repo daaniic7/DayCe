@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Imagen -->
+        <ImageView
+            android:id="@+id/imagenAviso"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/white" />
+
+        <!-- Nombre -->
+        <TextView
+            android:id="@+id/nombreCliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.459"
+            app:layout_constraintStart_toEndOf="@id/imagenAviso"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Nombre" />
+
+        <!-- Dirección -->
+        <TextView
+            android:id="@+id/direccionAviso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.519"
+            app:layout_constraintStart_toEndOf="@id/imagenAviso"
+            app:layout_constraintTop_toBottomOf="@id/nombreCliente"
+            tools:text="Dirección" />
+
+        <!-- Fecha -->
+        <TextView
+            android:id="@+id/fechaAviso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toEndOf="@id/imagenAviso"
+            app:layout_constraintTop_toBottomOf="@id/direccionAviso"
+            tools:text="Fecha" />
+
+        <!-- Descripción -->
+        <TextView
+            android:id="@+id/descripcionAviso"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toEndOf="@id/imagenAviso"
+            app:layout_constraintTop_toBottomOf="@id/fechaAviso"
+            tools:text="Descripción" />
+
+        <!-- Botón para borrar -->
+        <ImageButton
+            android:id="@+id/buttonBorrar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:layout_constraintStart_toStartOf="@id/descripcionAviso"
+            app:layout_constraintTop_toBottomOf="@id/descripcionAviso"
+            app:srcCompat="@drawable/papelera" />
+
+        <!-- Botón para editar -->
+        <ImageView
+            android:id="@+id/buttonEditarAviso"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            app:layout_constraintTop_toBottomOf="@id/descripcionAviso"
+            app:layout_constraintStart_toEndOf="@id/buttonBorrar"
+            app:srcCompat="@drawable/editar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
