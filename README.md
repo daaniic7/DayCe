@@ -3,7 +3,7 @@
 Una aplicación donde los clientes pueden solicitar los servicios de un técnico especializado en la instalación, reparación, mantenimiento y revisión de electrodomésticos,
 mientras que los técnicos podrán tener la oportunidad de tener todo su trabajo bien organizado, aceptando y rechazando avisos cuando sea necesario.
 
-  ## VERSION 1.2 YA DISPONIBLE, INFORMACIÓN ACTUALIZADA EN EL README Y EN EL CÓDIGO!
+  ## VERSION 1.3 YA DISPONIBLE, INFORMACIÓN ACTUALIZADA EN EL CÓDIGO!
 
 # VERSION 1.1
 
