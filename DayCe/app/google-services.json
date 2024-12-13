@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "520659703327",
+    "project_id": "logindayce",
+    "storage_bucket": "login-dayce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520659703327:android:7f193a5ea6de5da119672a",
+        "android_client_info": {
+          "package_name": "com.example.dayce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3EqgYYD51g0236-mI5a_-UhN-aMdka7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

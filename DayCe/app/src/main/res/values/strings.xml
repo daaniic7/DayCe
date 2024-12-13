@@ -2,6 +2,9 @@
     <string name="app_name">DayCe</string>
     <string name="iniciar_sesion">Iniciar Sesion</string>
     <string name="fichero_preferencia_compartida">preferenciasCompartidas_login</string>
-    <string name="usuario">usuario</string>
+    <string name="email">email</string>
     <string name="contrasena">contrasena</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="recuperar_contrasena">Recuperar Contraseña</string>
+    <string name="repetir_password">repetir_contraseña</string>
 </resources>
