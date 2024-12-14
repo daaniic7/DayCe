@@ -675,4 +675,11 @@ Por último quisiera mostrar como se ven las views en este momento tras realizar
     </LinearLayout>
 </FrameLayout>
 ```
+# VERSION 1.3
 
+En esta versión he implementado un Login y un Registro mediante Firebase, para ello he tenido que ir a la página de Firebase y seguir una serie de pasos descargando un json que se encuentra en la vista de proyecto, lamentablemente no puedo mostrarlo por aquí ya que eso vulneraría la seguridad de mi App.
+
+Para el Login además he implementado Preferencias Compartidas para que después de loguearnos, si cerramos la aplicación y la volvemos a abrir no empezaremos desde el Login sino que empezamos directamente con el Activity de los avisos.
+
+Para iniciar sesión nos debemos registrar y para ello nos llegará un correo a Gmail con el enlace que activará nuestra cuenta una vez nos hayamos registrado.
+Todas estas funcionalidades se muestran en el video que he subido a mi tarea de Moddle y para cualquier duda bastará con revisar el código
