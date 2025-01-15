@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">DayCe</string>
+    <string name="iniciar_sesion">Iniciar Sesion</string>
+    <string name="fichero_preferencia_compartida">preferenciasCompartidas_login</string>
+    <string name="email">email</string>
+    <string name="contrasena">contrasena</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="recuperar_contrasena">Recuperar Contraseña</string>
+    <string name="repetir_password">repetir_contraseña</string>
+    <string name="navigation_drawer_open">Abrir menú</string>
+    <string name="navigation_drawer_close">Cerrar menú</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <!-- Tema principal de la aplicación -->
+    <style name="Theme.DayCe" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Colores principales -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Colores de texto -->
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/textSecondary</item>
+
+        <!-- Fondo de la actividad -->
+        <item name="android:windowBackground">@color/backgroundLight</item>
+    </style>
+</resources>
+

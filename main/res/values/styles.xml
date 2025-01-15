@@ -1,0 +1,13 @@
+<resources>
+    <!-- Estilo para botones -->
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/buttonBackground</item>
+        <item name="android:textColor">@color/buttonText</item>
+    </style>
+
+    <!-- Estilo para EditText -->
+    <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:backgroundTint">@color/colorAccent</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+</resources>
